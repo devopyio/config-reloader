@@ -2,7 +2,7 @@ DATE := $(shell date +%FT%T%z)
 USER := $(shell whoami)
 GIT_HASH := $(shell git --no-pager describe --tags --always)
 BRANCH := $(shell git branch | grep \* | cut -d ' ' -f2)
-DOCKER_IMAGE := loginapp
+DOCKER_IMAGE := config-reloader
 
 LINT_FLAGS := run --deadline=120s
 LINTER := ./bin/golangci-lint
