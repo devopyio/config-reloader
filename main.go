@@ -15,16 +15,6 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-const (
-	logFormatLogfmt = "logfmt"
-	logFormatJson   = "json"
-)
-
-var availableLogFormats = []string{
-	logFormatLogfmt,
-	logFormatJson,
-}
-
 func main() {
 	app := kingpin.New("config-reloader", "Reloads Configuration")
 
