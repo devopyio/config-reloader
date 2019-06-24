@@ -34,7 +34,7 @@ func main() {
 	reloadURL := app.Flag("webhook-url", "webook URL to send HTTP GET on").
 		Envar("RELOAD_URL").Required().URL()
 
-	watchInterval := app.Flag("watch-interval", "watch interval").
+	watchInterval := app.Flag("watch-interval", "time interval on which reloader will double check if config has changed").
 		Envar("WATCH_INTERVAL").Default("3m").Duration()
 
 	kingpin.MustParse(app.Parse(os.Args[1:]))
