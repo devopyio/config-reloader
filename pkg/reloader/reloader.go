@@ -26,6 +26,7 @@ type Reloader struct {
 	watchInterval time.Duration
 	retryInterval time.Duration
 
+	retryLimit  int
 	lastCfgHash []byte
 }
 
@@ -37,6 +38,7 @@ func New(reloadURL *url.URL, cfgFile string, watchInterval time.Duration) *Reloa
 		cfgFile:       cfgFile,
 		watchInterval: watchInterval,
 		retryInterval: 5 * time.Second,
+		retryLimit:    5,
 	}
 }
 
@@ -137,12 +139,17 @@ func (r *Reloader) apply(ctx context.Context) error {
 		return nil
 	}
 
-	// Retry trigger reload until it succeeded or next tick is near.
-	// retryCtx, cancel := context.WithTimeout(ctx, r.watchInterval)
-	// defer cancel()
-
-	if err := r.triggerReload(ctx); err != nil {
-		return errors.Wrap(err, "trigger reload")
+	var retryCount int
+	for {
+		if retryCount > r.retryLimit {
+			return nil
+		}
+		err := r.triggerReload(ctx)
+		if err == nil {
+			break
+		}
+		time.Sleep(r.watchInterval)
+		retryCount++
 	}
 
 	r.lastCfgHash = cfgHash
